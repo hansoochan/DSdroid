@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout01"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<LinearLayout
+	    android:id="@+id/fbLinearLayoutList"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true">
+
+		<LinearLayout
+		    android:id="@+id/fbLinearLayoutSelect"
+			android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+		</LinearLayout>
+
+		<LinearLayout
+		    android:id="@+id/fbLinearLayoutCreate"
+			android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+		</LinearLayout>
+	</LinearLayout>
+
+	<LinearLayout
+	    android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_above="@+id/fbLinearLayoutList">
+		
+		<ListView
+		    android:id="@android:id/list"
+		    android:layout_width="fill_parent"
+			android:layout_height="fill_parent"/>
+		
+		<TextView
+		    android:id="@android:id/empty"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:text="@string/NoData"/>
+	</LinearLayout>
+</RelativeLayout>

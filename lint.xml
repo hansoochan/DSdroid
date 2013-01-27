@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="DefaultLocale">
+        <ignore path="src/com/seandev/ds4droid/EmulatorThread.java" />
+        <ignore path="src/com/seandev/ds4droid/FileBrowser.java" />
+        <ignore path="src/com/seandev/ds4droid/FileDialog.java" />
+    </issue>
+    <issue id="UseSparseArrays">
+        <ignore path="src/com/seandev/ds4droid/Button.java" />
+    </issue>
+</lint>

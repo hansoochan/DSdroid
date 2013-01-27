@@ -1,0 +1,103 @@
+/*
+ Copyright (C) 2012-2013 Sean Dev
+ 
+ This file is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 2 of the License, or
+ (at your option) any later version.
+ 
+ This file is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with the this software.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package com.seandev.ds4droid;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import com.seandev.ds4droid.MainActivity.NDSView;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
+class DrawingThread extends Thread{
+	
+	public DrawingThread(EmulatorThread coreThread, NDSView view) {
+		super("DrawingThread");
+		this.view = view;
+		this.coreThread = coreThread;
+		bitmapPaint.setFilterBitmap(false);
+	}
+	
+	final NDSView view;
+	final EmulatorThread coreThread;
+	final Paint bitmapPaint = new Paint();
+	
+	Lock drawEventLock = new ReentrantLock();
+	Condition drawEvent = drawEventLock.newCondition();
+	
+	AtomicBoolean keepDrawing = new AtomicBoolean(true);
+	
+	static final boolean DO_DIRECT_DRAW = false;
+	
+	@Override
+	public void run() {
+		
+		while(keepDrawing.get()) {
+		
+			drawEventLock.lock();
+			try {
+				drawEvent.await();
+			} catch (InterruptedException e) {
+			}
+			
+			if(!keepDrawing.get())
+				return;
+			
+			Canvas canvas = DO_DIRECT_DRAW ? null : view.surfaceHolder.lockCanvas();
+			try {
+				synchronized(view.surfaceHolder) {
+					
+					if(canvas != null) {
+						if(!DeSmuME.inited)
+							continue;
+						
+						if(view.doForceResize)
+							view.resize(view.width, view.height, view.pixelFormat);
+						
+						if(view.emuBitmapMain == null)
+							continue;
+						
+						DeSmuME.copyMasterBuffer();
+						
+						if(DO_DIRECT_DRAW)
+							DeSmuME.drawToSurface(view.surfaceHolder.getSurface());
+						else {
+							DeSmuME.draw(view.emuBitmapMain, view.emuBitmapTouch, view.landscape && view.dontRotate);
+						}
+						
+						if(!DO_DIRECT_DRAW) {
+							canvas.drawBitmap(view.emuBitmapMain, view.srcMain, view.destMain, bitmapPaint);
+							canvas.drawBitmap(view.emuBitmapTouch, view.srcTouch, view.destTouch, bitmapPaint);
+							MainActivity.controls.drawControls(canvas);
+						}
+					}
+
+				}
+			}
+			finally {
+				if(!DO_DIRECT_DRAW && canvas != null)
+					view.surfaceHolder.unlockCanvasAndPost(canvas);
+				drawEventLock.unlock();
+			}
+		
+		}
+		
+	}
+	
+}

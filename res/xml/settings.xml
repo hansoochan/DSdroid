@@ -1,0 +1,19 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <PreferenceCategory android:title="@string/Display">
+        <ListPreference android:title="@string/Filter" android:summary="@string/FilterDesc" android:key="Filter" android:entryValues="@array/FilterValues" android:entries="@array/FilterNames"/>
+	    <CheckBoxPreference android:title="@string/ShowFPS" android:summary="@string/ShowFPSDesc" android:key="DisplayFps"/>
+	    <CheckBoxPreference android:title="@string/LandscapeMode" android:key="LandscapeMode" android:summary="@string/LandscapeModeDesc"/>
+    </PreferenceCategory>
+    
+   	<PreferenceCategory android:title="@string/Emulation">
+	    <ListPreference android:title="@string/FrameSkip" android:summary="@string/FrameSkipDesc" android:key="FrameSkip" android:entryValues="@array/FrameSkipValues" android:entries="@array/FrameSkipValues"/>
+	    <ListPreference android:title="@string/Renderer" android:summary="@string/RendererDesc" android:key="Renderer" android:entryValues="@array/RenderValues" android:entries="@array/RenderNames"/>
+    </PreferenceCategory>
+   	  
+    <PreferenceCategory android:title="@string/Sound">
+        <CheckBoxPreference android:title="@string/Sound" android:summary="@string/SoundDesc" android:key="Sound"/>
+        <CheckBoxPreference android:title="@string/Microphone" android:summary="@string/MicrophoneDesc" android:key="Microphone" />
+    </PreferenceCategory>
+      
+</PreferenceScreen>
