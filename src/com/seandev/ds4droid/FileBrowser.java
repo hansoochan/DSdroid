@@ -36,7 +36,7 @@ public class FileBrowser extends ListActivity {
 		public static final int MODE_OPEN = 1;
 	}
 
-	private String root = "/mnt/";
+	private static final String ROOT = "/mnt/";
 	private static final String ITEM_KEY = "key";
 	private static final String ITEM_IMAGE = "image";
 	public static final String START_PATH = "START_PATH";
@@ -48,7 +48,7 @@ public class FileBrowser extends ListActivity {
 	private List<String> path = null;
 	private ArrayList<HashMap<String, Object>> mList;
 	private String parentPath;
-	private String currentPath = root;
+	private String currentPath = ROOT;
 
 	@SuppressWarnings("unused")
 	private int selectionMode = SelectionMode.MODE_CREATE;
@@ -69,7 +69,7 @@ public class FileBrowser extends ListActivity {
 		canSelectDir = getIntent().getBooleanExtra(CAN_SELECT_DIR, false);
 
 		String startPath = getIntent().getStringExtra(START_PATH);
-		startPath = startPath != null ? startPath : root;
+		startPath = startPath != null ? startPath : ROOT;
 		if (canSelectDir) {
 			File file = new File(startPath);
 			selectedFile = file;
@@ -96,14 +96,14 @@ public class FileBrowser extends ListActivity {
 		File f = new File(currentPath);
 		File[] files = f.listFiles();
 		if (files == null) {
-			currentPath = root;
+			currentPath = ROOT;
 			f = new File(currentPath);
 			files = f.listFiles();
 		}
 
-		item.add(root);
-		addItem(root, R.drawable.folder);
-		path.add(root);
+		item.add(ROOT);
+		addItem(ROOT, R.drawable.folder);
+		path.add(ROOT);
 		if (!currentPath.equals("/")) {
 			item.add("../");
 			addItem("../", R.drawable.folder);
@@ -118,8 +118,6 @@ public class FileBrowser extends ListActivity {
 		for (File file : files) {
 			if (file.isDirectory()) {
 				String dirName = file.getName();
-				if (dirName.charAt(0) == '.')
-				 	 break;
 				dirsMap.put(dirName, dirName);
 				dirsPathMap.put(dirName, file.getPath());
 			} else {
